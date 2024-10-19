@@ -1,0 +1,34 @@
+{
+	"geode": "3.8.1",
+	"gd": {
+		"win": "2.206",
+		"android": "2.206",
+		"mac": "2.206",
+		"ios": "2.206"
+	},
+	"id": "user95401.platformered_menu_game",
+	"name": "Platformered Menu Game",
+	"version": "v1.0.0",
+	"developer": "user95401",
+	"description": "player in menu game is platformered.. idk aaa like, it is going backward, forward and jumping",
+	"tags": [ "gameplay", "offline", "enhancement", "customization" ],
+	"links": {
+		"community": "https://discord.gg/6SxAbk3bTA",
+		"homepage": "https://t.me/user95401_channel",
+		"source": "https://github.com/user95401/Platformered-Menu-Game"
+	},
+	"settings": {
+		"Runaway From Mouse": {
+			"name": "Runaway From Mouse",
+			"description": "",
+			"type": "bool",
+			"default": true
+		},
+		"Freese Background": {
+			"name": "Freese Background",
+			"description": "",
+			"type": "bool",
+			"default": true
+		}
+	}
+}
