@@ -1,4 +1,5 @@
 #pragma once
+
 #include <Geode/Geode.hpp>
 #include <Geode/ui/GeodeUI.hpp>
 using namespace geode::prelude;
@@ -25,12 +26,36 @@ template<typename T, typename U> constexpr size_t OFFSET_BY_MEMBER(U T::* member
 	return c.get(reinterpret_cast<FriendeeClass__*>(v)); \
 }(value)
 
+namespace fs {
+    using namespace std::filesystem;
+    inline std::error_code last_err_code;
+    template <typename T> inline auto rtnWithErrLog(T rtn, std::string log) { log::error("{}", log); return rtn; }
+    inline auto exists(path path) {
+        return cocos::fileExistsInSearchPaths(path.string().c_str());
+    }
+    inline auto read(path path) {
+        unsigned long file_size = 0;
+        auto buffer = CCFileUtils::sharedFileUtils()->getFileData(path.string().c_str(), "rb", &file_size);
+        std::string data = "read failed...";
+        if (buffer && file_size != 0) data = std::string(reinterpret_cast<char*>(buffer), file_size);
+        return data;
+    }
+    inline auto rename(path old_path, path new_path) {
+        std::filesystem::rename(old_path, new_path, last_err_code);
+        log::debug(
+            "{}(\n\told_path \"{}\", \n\told_path \"{}\"\n): last_err_code={}, last_err_code.message={}",
+            __func__, old_path, new_path, last_err_code, last_err_code.message()
+        );
+        return true;
+    }
+}
+
 namespace geode::cocos {
-    inline std::string frameName(CCNode* node) {
+    inline std::string getFrameName(CCNode* node) {
         if (node == nullptr) return "NIL_NODE";
-        if (auto textureProtocol = dynamic_cast<CCTextureProtocol*>(node)) {
+        if (auto textureProtocol = typeinfo_cast<CCTextureProtocol*>(node)) {
             if (auto texture = textureProtocol->getTexture()) {
-                if (auto spriteNode = dynamic_cast<CCSprite*>(node)) {
+                if (auto spriteNode = typeinfo_cast<CCSprite*>(node)) {
                     auto* cachedFrames = CCSpriteFrameCache::sharedSpriteFrameCache()->m_pSpriteFrames;
                     const auto rect = spriteNode->getTextureRect();
                     for (auto [key, frame] : CCDictionaryExt<std::string, CCSpriteFrame*>(cachedFrames)) {
@@ -47,12 +72,51 @@ namespace geode::cocos {
                 }
             }
         }
-        auto btnSpriteTry = frameName(getChild(node, 0));
+        auto btnSpriteTry = getFrameName(getChild(node, 0));
         if (
             btnSpriteTry != "NIL_NODE"
             and btnSpriteTry != "CANT_GET_FRAME_NAME"
             ) return btnSpriteTry;
         return "CANT_GET_FRAME_NAME";
+    }
+    inline std::string getTypeName(CCObject* object) {
+#ifdef GEODE_IS_WINDOWS
+        return typeid(*object).name() + 6;
+#else 
+        {
+            std::string ret;
+
+            int status = 0;
+            auto demangle = abi::__cxa_demangle(typeid(*object).name(), 0, 0, &status);
+            if (status == 0) {
+                ret = demangle;
+            }
+            free(demangle);
+
+            return ret;
+        }
+#endif
+    }
+    inline std::string idOrTypeOfNode(cocos2d::CCNode* node) {
+        if (!node) return "NIL NODE";
+        auto id = node->getID();
+        auto type = getTypeName(node);
+        return (id.size() > 1 ? id : type);
+    }
+    inline std::vector<std::string> getIdsTreeUpToNode(cocos2d::CCNode* start, cocos2d::CCNode* up_to) {
+        auto rtn = std::vector<std::string>();
+        if (start == nullptr) return rtn;
+        //add start
+        rtn.insert(rtn.begin(), idOrTypeOfNode(start));
+        //add next parents
+        auto next_parent = start->getParent();
+        while (next_parent != nullptr) {
+            rtn.insert(rtn.begin(), idOrTypeOfNode(next_parent));
+            next_parent = next_parent->getParent();
+            if (up_to == next_parent) next_parent = nullptr;
+        }
+        //rtn rly
+        return rtn;
     }
     inline auto createDataNode(std::string id, std::string text = "", int tag = 0) {
         auto node = CCLabelBMFont::create("", "chatFont.fnt");
@@ -67,6 +131,25 @@ namespace geode::cocos {
         if (!node) log::warn("FAILED TO FIND DATA NODE! id: {}", id);
         return node;
     }
+    class CCLambdaAction : public CCAction {
+    public:
+        std::function<void()> m_callback;
+        CCLambdaAction() {};
+        ~CCLambdaAction() {};
+        void step(float dt) override {
+            m_callback();
+        };
+        static CCLambdaAction* create(std::function<void()>&& callback) {
+            auto ret = new (std::nothrow) CCLambdaAction();
+            if (ret) {
+                ret->m_callback = std::forward<std::remove_reference_t<decltype(callback)>>(callback);
+                ret->autorelease();
+                return ret;
+            }
+            delete ret;
+            return nullptr;
+        };
+    };
 };
 
 namespace geode::utils::string {
@@ -159,5 +242,5 @@ struct GJScoreKey {
 };
 
 #ifdef GEODE_IS_ANDROID
-#define debug error
+//#define debug error
 #endif // GEODE_IS_ANDROID

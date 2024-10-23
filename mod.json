@@ -8,9 +8,9 @@
 	},
 	"id": "user95401.platformered_menu_game",
 	"name": "Platformered Menu Game",
-	"version": "v1.0.0",
+	"version": "v1.1.0",
 	"developer": "user95401",
-	"description": "player in menu game is platformered.. idk aaa like, it is going backward, forward and jumping",
+	"description": "Player in main menu is in Platformer Mode now!",
 	"tags": [ "gameplay", "offline", "enhancement", "customization" ],
 	"links": {
 		"community": "https://discord.gg/6SxAbk3bTA",
@@ -18,17 +18,50 @@
 		"source": "https://github.com/user95401/Platformered-Menu-Game"
 	},
 	"settings": {
+		"Freese Background": {
+			"name": "Freese Background",
+			"description": "",
+			"type": "bool",
+			"default": true
+		},
+		"Support Jetpacks": {
+			"name": "Support Jetpacks",
+			"description": "update ships to jetpacks.",
+			"type": "bool",
+			"default": true
+		},
+		"No Wave": {
+			"name": "No Wave",
+			"description": "retry player reset function until there is other gamemode",
+			"type": "bool",
+			"default": true
+		},
+		"No Swing": {
+			"name": "No Swing",
+			"description": "retry player reset function until there is other gamemode",
+			"type": "bool",
+			"default": true
+		},
 		"Runaway From Mouse": {
 			"name": "Runaway From Mouse",
 			"description": "",
 			"type": "bool",
 			"default": true
 		},
-		"Freese Background": {
-			"name": "Freese Background",
-			"description": "",
-			"type": "bool",
-			"default": true
+		"Mouse Zone": {
+			"name": "Mouse Zone",
+			"description": "mousezone mltpr",
+			"type": "float",
+			"default": 42.0,
+			"min": 0.0,
+			"max": 128.0,
+			"controls": {
+				"input": true,
+				"arrows": true,
+				"arrow-step": 0.01,
+				"slider": true,
+				"slider-step": 0.001
+			}
 		}
 	}
 }
