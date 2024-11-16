@@ -1,5 +1,5 @@
 {
-	"geode": "4.0.0-alpha.1",
+	"geode": "4.0.0-beta.1",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -8,7 +8,7 @@
 	},
 	"id": "user95401.platformered_menu_game",
 	"name": "Platformered Menu Game",
-	"version": "v1.2.0",
+	"version": "v1.2.1",
 	"developer": "user95401",
 	"description": "Player in main menu is in Platformer Mode now!",
 	"tags": [ "gameplay", "offline", "enhancement", "customization" ],
