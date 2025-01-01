@@ -8,7 +8,7 @@
 	},
 	"id": "user95401.platformered_menu_game",
 	"name": "Platformered Menu Game",
-	"version": "v1.2.3",
+	"version": "v1.2.4",
 	"developer": "user95401",
 	"description": "Player in main menu is in Platformer Mode now!",
 	"tags": [ "gameplay", "offline", "enhancement", "customization" ],
@@ -18,7 +18,7 @@
 		"source": "https://github.com/user95401/Platformered-Menu-Game"
 	},
 	"settings": {
-		"Frezse Background": {
+		"Freeze Background": {
 			"name": "Freeze Background",
 			"description": "",
 			"type": "bool",
