@@ -21,7 +21,7 @@ class $modify(MenuGameLayerExt, MenuGameLayer) {
     $override bool init() {
         auto init_result = MenuGameLayer::init();
 
-        if (SETTING(bool, "Runaway From Mouse")) {
+        if (SETTING(bool, "Run Away From Mouse")) {
             this->schedule(schedule_selector(MenuGameLayerExt::runaway), 0.001);
         };
 
@@ -30,7 +30,7 @@ class $modify(MenuGameLayerExt, MenuGameLayer) {
     $override void update(float p0) {
         MenuGameLayer::update(p0);
 
-        if (SETTING(bool, "Freese Background")) {
+        if (SETTING(bool, "Freeze Background")) {
             m_backgroundSpeed = 0.1;
             findFirstChildRecursive<CCNode>(m_groundLayer,
                 [](CCNode* node) {
@@ -56,7 +56,7 @@ class $modify(MenuGameLayerExt, MenuGameLayer) {
         else plr->m_holdingRight = rndb();
         //dont go left a lot
         plr->m_holdingLeft = plr->getPosition().x < 5 ? false : plr->m_holdingLeft;
-        plr->m_holdingRight = plr->getPosition().x < 5 ? true : plr->m_holdingRight;//go back to screen!
+        plr->m_holdingRight = (plr->getPosition().x < 5 and SETTING(bool, "Off-screen Protection")) ? true : plr->m_holdingRight;//go back to screen!
         
     }
     $override void resetPlayer() {
