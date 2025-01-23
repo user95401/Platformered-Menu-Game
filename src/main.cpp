@@ -1,5 +1,4 @@
 ﻿#include <_main.hpp>
-#include <_updater.hpp>
 
 #include <Geode/modify/MenuGameLayer.hpp>
 class $modify(MenuGameLayerExt, MenuGameLayer) {
